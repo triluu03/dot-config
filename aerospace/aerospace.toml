@@ -58,6 +58,16 @@ automatically-unhide-macos-hidden-apps = false
     outer.top =        0
     outer.right =      0
 
+# Workspaces and monitor assignment
+[workspace-to-monitor-force-assignment]
+    1 = 'secondary'		# Terminal
+    2 = 'secondary'		# Browswer
+    3 = ['main', 'built-in']	# Messaging
+    4 = ['main', 'built-in']	# Mail
+    C = ['main', 'built-in']	# Calendar
+    F = ['main', 'built-in']	# Finder
+    M = ['main', 'built-in']	# Music (Spotify)
+
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented
