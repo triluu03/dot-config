@@ -11,8 +11,8 @@ return {
 	},
 	lazy = false,
 	keys = {
-		{ "\\", ":Neotree reveal<CR>",           desc = "NeoTree reveal",           silent = true },
-		{ "|",  ":Neotree document_symbols<CR>", desc = "NeoTree document symbols", silent = true },
+		{ "\\", ":Neotree reveal<CR>", desc = "NeoTree reveal", silent = true },
+		{ "|", ":Neotree document_symbols<CR>", desc = "NeoTree document symbols", silent = true },
 	},
 	opts = {
 		sources = {
