@@ -13,7 +13,7 @@ return {
 		require("mason-null-ls").setup({
 			ensure_installed = {
 				"checkmake",
-				"prettier", -- ts/js formatter
+				"prettierd", -- ts/js formatter
 				"stylua", -- lua formatter
 				"eslint_d", -- ts/js linter
 				"shfmt",
@@ -25,7 +25,7 @@ return {
 
 		local sources = {
 			diagnostics.checkmake,
-			formatting.prettier.with({ filetypes = { "html", "json", "yaml", "markdown" } }),
+			formatting.prettierd,
 			formatting.stylua,
 			formatting.shfmt.with({ args = { "-i", "4" } }),
 			formatting.terraform_fmt,
