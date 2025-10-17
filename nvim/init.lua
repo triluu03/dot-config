@@ -213,7 +213,7 @@ require("lazy").setup({
 	require("kickstart.plugins.indent_line"),
 	-- require("kickstart.plugins.lint"),
 	require("kickstart.plugins.autopairs"),
-	require("kickstart.plugins.neo-tree"),
+	-- require("kickstart.plugins.neo-tree"),
 	require("kickstart.plugins.which_key"),
 	require("kickstart.plugins.telescope"),
 	require("kickstart.plugins.blink"),
