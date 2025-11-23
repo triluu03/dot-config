@@ -32,7 +32,7 @@ vim.o.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-	vim.o.clipboard = "unnamedplus"
+  vim.o.clipboard = "unnamedplus"
 end)
 
 -- Enable break indent
@@ -146,22 +146,59 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 --  Try it with `yap` in normal mode
 --  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-	callback = function()
-		vim.hl.on_yank()
-	end,
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
+
+-- [[ Very fancy stuff ]]
+-- Backward version of the inside motions
+local function backward_inner_textobj()
+  -- Count operator
+  local count = vim.v.count1
+  -- Get the next key after I
+  local c = vim.fn.nr2char(vim.fn.getchar())
+
+  -- Search backwards for the opening delimiter
+  for _ = 1, count do
+    vim.fn.search("\\V" .. c, "b")
+  end
+
+  -- Visually select the "inner" part of the pair
+  vim.cmd("normal! vi" .. c)
+end
+vim.keymap.set({ "o", "x" }, "I", backward_inner_textobj, { silent = true })
+
+-- Backward version of around motions
+local function backward_around_textobj()
+  -- Count operator
+  local count = vim.v.count1
+  -- Get the next key after I
+  local c = vim.fn.nr2char(vim.fn.getchar())
+
+  -- Search backwards for the opening delimiter
+  for _ = 1, count do
+    vim.fn.search("\\V" .. c, "b")
+  end
+
+  -- Visually select the "inner" part of the pair
+  vim.cmd("normal! va" .. c)
+end
+vim.keymap.set({ "o", "x" }, "A", backward_around_textobj, { silent = true })
+--
+-- [[ End of very fancy stuff ]]
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-	if vim.v.shell_error ~= 0 then
-		error("Error cloning lazy.nvim:\n" .. out)
-	end
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    error("Error cloning lazy.nvim:\n" .. out)
+  end
 end
 
 ---@type vim.Option
@@ -180,105 +217,105 @@ rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-	"NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
-	-- "github/copilot.vim",
-	"OXY2DEV/markview.nvim", -- Markdown preview plugin
-	-- "mechatroner/rainbow_csv", -- Rainbow CSV plugin, NOTE: this does not seem to work for Lua.
+  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+  "NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
+  -- "github/copilot.vim",
+  "OXY2DEV/markview.nvim",    -- Markdown preview plugin
+  -- "mechatroner/rainbow_csv", -- Rainbow CSV plugin, NOTE: this does not seem to work for Lua.
 
-	-- NOTE: Plugins can also be added by using a table,
-	-- with the first argument being the link and the following
-	-- keys can be used to configure plugin behavior/loading/etc.
-	--
-	-- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-	--
+  -- NOTE: Plugins can also be added by using a table,
+  -- with the first argument being the link and the following
+  -- keys can be used to configure plugin behavior/loading/etc.
+  --
+  -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
+  --
 
-	-- Alternatively, use `config = function() ... end` for full control over the configuration.
-	-- If you prefer to call `setup` explicitly, use:
-	--    {
-	--        'lewis6991/gitsigns.nvim',
-	--        config = function()
-	--            require('gitsigns').setup({
-	--                -- Your gitsigns configuration here
-	--            })
-	--        end,
-	--    }
-	--
-	-- Here is a more advanced example where we pass configuration
-	-- options to `gitsigns.nvim`.
-	--
-	-- See `:help gitsigns` to understand what the configuration keys do
+  -- Alternatively, use `config = function() ... end` for full control over the configuration.
+  -- If you prefer to call `setup` explicitly, use:
+  --    {
+  --        'lewis6991/gitsigns.nvim',
+  --        config = function()
+  --            require('gitsigns').setup({
+  --                -- Your gitsigns configuration here
+  --            })
+  --        end,
+  --    }
+  --
+  -- Here is a more advanced example where we pass configuration
+  -- options to `gitsigns.nvim`.
+  --
+  -- See `:help gitsigns` to understand what the configuration keys do
 
-	--  require 'kickstart.plugins.debug',
-	require("kickstart.plugins.indent_line"),
-	-- require("kickstart.plugins.lint"),
-	require("kickstart.plugins.autopairs"),
-	-- require("kickstart.plugins.neo-tree"),
-	require("kickstart.plugins.which_key"),
-	require("kickstart.plugins.telescope"),
-	require("kickstart.plugins.blink"),
-	require("kickstart.plugins.todo_comments"),
-	require("kickstart.plugins.mini"),
-	require("kickstart.plugins.treesitter"),
-	require("kickstart.plugins.lsp.lazydev"),
-	require("kickstart.plugins.lsp.nvim_lspconfig"),
-	require("kickstart.plugins.colorscheme.tokyonight"),
-	require("kickstart.plugins.colorscheme.zenbones"),
-	require("kickstart.plugins.rust.rustacianvim"),
-	require("kickstart.plugins.rust.rust"),
-	require("kickstart.plugins.git.gitsigns"),
-	require("kickstart.plugins.git.lazygit"),
+  --  require 'kickstart.plugins.debug',
+  require("kickstart.plugins.indent_line"),
+  -- require("kickstart.plugins.lint"),
+  require("kickstart.plugins.autopairs"),
+  -- require("kickstart.plugins.neo-tree"),
+  require("kickstart.plugins.which_key"),
+  require("kickstart.plugins.telescope"),
+  require("kickstart.plugins.blink"),
+  require("kickstart.plugins.todo_comments"),
+  require("kickstart.plugins.mini"),
+  require("kickstart.plugins.treesitter"),
+  require("kickstart.plugins.lsp.lazydev"),
+  require("kickstart.plugins.lsp.nvim_lspconfig"),
+  require("kickstart.plugins.colorscheme.tokyonight"),
+  require("kickstart.plugins.colorscheme.zenbones"),
+  require("kickstart.plugins.rust.rustacianvim"),
+  require("kickstart.plugins.rust.rust"),
+  require("kickstart.plugins.git.gitsigns"),
+  require("kickstart.plugins.git.lazygit"),
 
-	--  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-	{ import = "custom.plugins" },
-	--
-	-- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
-	-- Or use telescope!
-	-- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-	-- you can continue same window with `<space>sr` which resumes last telescope search
+  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+  { import = "custom.plugins" },
+  --
+  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
+  -- Or use telescope!
+  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
+  -- you can continue same window with `<space>sr` which resumes last telescope search
 }, {
-	ui = {
-		-- If you are using a Nerd Font: set icons to an empty table which will use the
-		-- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-		icons = vim.g.have_nerd_font and {} or {
-			cmd = "⌘",
-			config = "🛠",
-			event = "📅",
-			ft = "📂",
-			init = "⚙",
-			keys = "🗝",
-			plugin = "🔌",
-			runtime = "💻",
-			require = "🌙",
-			source = "📄",
-			start = "🚀",
-			task = "📌",
-			lazy = "💤 ",
-		},
-	},
+  ui = {
+    -- If you are using a Nerd Font: set icons to an empty table which will use the
+    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+    icons = vim.g.have_nerd_font and {} or {
+      cmd = "⌘",
+      config = "🛠",
+      event = "📅",
+      ft = "📂",
+      init = "⚙",
+      keys = "🗝",
+      plugin = "🔌",
+      runtime = "💻",
+      require = "🌙",
+      source = "📄",
+      start = "🚀",
+      task = "📌",
+      lazy = "💤 ",
+    },
+  },
 })
 -- Copy full absolute path
 vim.keymap.set("n", "<leader>pf", function()
-	vim.fn.setreg("+", vim.fn.expand("%:p"))
-	print("Copied full path!")
+  vim.fn.setreg("+", vim.fn.expand("%:p"))
+  print("Copied full path!")
 end, { desc = "Copy full absolute path" })
 
 -- Copy path relative to CWD
 vim.keymap.set("n", "<leader>pr", function()
-	vim.fn.setreg("+", vim.fn.expand("%"))
-	print("Copied relative path!")
+  vim.fn.setreg("+", vim.fn.expand("%"))
+  print("Copied relative path!")
 end, { desc = "Copy path relative to CWD" })
 
 -- Copy filename only
 vim.keymap.set("n", "<leader>pn", function()
-	vim.fn.setreg("+", vim.fn.expand("%:t"))
-	print("Copied filename!")
+  vim.fn.setreg("+", vim.fn.expand("%:t"))
+  print("Copied filename!")
 end, { desc = "Copy filename only" })
 
 -- Copy directory path only
 vim.keymap.set("n", "<leader>pd", function()
-	vim.fn.setreg("+", vim.fn.expand("%:p:h"))
-	print("Copied directory path!")
+  vim.fn.setreg("+", vim.fn.expand("%:p:h"))
+  print("Copied directory path!")
 end, { desc = "Copy directory path only" })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
