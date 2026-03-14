@@ -218,9 +218,8 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  "NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
   -- "github/copilot.vim",
-  "OXY2DEV/markview.nvim",    -- Markdown preview plugin
+  "OXY2DEV/markview.nvim", -- Markdown preview plugin
   -- "mechatroner/rainbow_csv", -- Rainbow CSV plugin, NOTE: this does not seem to work for Lua.
 
   -- NOTE: Plugins can also be added by using a table,
