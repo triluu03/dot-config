@@ -69,6 +69,10 @@ vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
+-- Tab and shift width
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+
 -- Preview substitutions live, as you type!
 vim.o.inccommand = "split"
 
@@ -205,6 +209,29 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
+-- Configuring rust-analyzer
+vim.lsp.config("rust_analyzer", {
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        features = "all", -- Enable all features
+      },
+    },
+  },
+})
+
+vim.g.rustaceanvim = {
+  server = {
+    settings = {
+      ["rust-analyzer"] = {
+        cargo = {
+          features = "all",
+        },
+      },
+    },
+  },
+}
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -256,12 +283,22 @@ require("lazy").setup({
   require("kickstart.plugins.todo_comments"),
   require("kickstart.plugins.mini"),
   require("kickstart.plugins.treesitter"),
+  require("kickstart.plugins.tree_sitter_rstml"),
+  require("kickstart.plugins.nvim_ts_autotag"),
   require("kickstart.plugins.lsp.lazydev"),
   require("kickstart.plugins.lsp.nvim_lspconfig"),
-  require("kickstart.plugins.colorscheme.tokyonight"),
-  require("kickstart.plugins.colorscheme.zenbones"),
-  require("kickstart.plugins.rust.rustacianvim"),
+
+  -- Colorscheme
+  -- require("kickstart.plugins.colorscheme.tokyonight"),
+  -- require("kickstart.plugins.colorscheme.catppuccin"),
+  require("kickstart.plugins.colorscheme.kanagawa"),
+  -- require("kickstart.plugins.colorscheme.zenbones"),
+
+  -- Rust
+  require("kickstart.plugins.rust.rustaceanvim"),
   require("kickstart.plugins.rust.rust"),
+
+  -- Git
   require("kickstart.plugins.git.gitsigns"),
   require("kickstart.plugins.git.lazygit"),
 
