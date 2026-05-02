@@ -232,6 +232,9 @@ vim.g.rustaceanvim = {
   },
 }
 
+-- C# official LSP: Roslyn is not added to the Mason plugin at the time of writing.
+vim.lsp.enable("roslyn_ls")
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run

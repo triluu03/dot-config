@@ -26,7 +26,7 @@ return {
 		-- In general, you have a "server" which is some tool built to understand a particular
 		-- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
 		-- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-		-- processes that communicate with some "client" - in this case, Neovim!
+		-- processes that communicate with some "client" - in this case, Neovim!lsp
 		--
 		-- LSP provides Neovim with features like:
 		--  - Go to definition
@@ -88,8 +88,7 @@ return {
 
 				-- Fuzzy find all the symbols in your current workspace.
 				--  Similar to document symbols, except searches over your entire project.
-				map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols,
-					"Open Workspace Symbols")
+				map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
 
 				-- Jump to the type of the word under your cursor.
 				--  Useful when you're not sure what type a variable is and you want to see
@@ -116,15 +115,14 @@ return {
 				-- When you move your cursor, the highlights will be cleared (the second autocommand).
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 				if
-				    client
-				    and client_supports_method(
-					    client,
-					    vim.lsp.protocol.Methods.textDocument_documentHighlight,
-					    event.buf
-				    )
+						client
+						and client_supports_method(
+							client,
+							vim.lsp.protocol.Methods.textDocument_documentHighlight,
+							event.buf
+						)
 				then
-					local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight",
-						{ clear = false })
+					local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
 					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 						buffer = event.buf,
 						group = highlight_augroup,
@@ -138,12 +136,13 @@ return {
 					})
 
 					vim.api.nvim_create_autocmd("LspDetach", {
-						group = vim.api.nvim_create_augroup("kickstart-lsp-detach",
-							{ clear = true }),
+						group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
 						callback = function(event2)
 							vim.lsp.buf.clear_references()
-							vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer =
-							event2.buf })
+							vim.api.nvim_clear_autocmds({
+								group = "kickstart-lsp-highlight",
+								buffer = event2.buf,
+							})
 						end,
 					})
 				end
@@ -153,12 +152,13 @@ return {
 				--
 				-- This may be unwanted, since they displace some of your code
 				if
-				    client
-				    and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
+						client
+						and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
 				then
 					map("<leader>th", function()
-						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr =
-						event.buf }))
+						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({
+							bufnr = event.buf,
+						}))
 					end, "[T]oggle Inlay [H]ints")
 				end
 			end,
@@ -180,19 +180,19 @@ return {
 			} or {},
 			virtual_lines = { current_line = true },
 			virtual_text = false,
-			--        virtual_text = {
-			--          source = 'if_many',
-			--          spacing = 2,
-			--          format = function(diagnostic)
-			--            local diagnostic_message = {
-			--              [vim.diagnostic.severity.ERROR] = diagnostic.message,
-			--              [vim.diagnostic.severity.WARN] = diagnostic.message,
-			--              [vim.diagnostic.severity.INFO] = diagnostic.message,
-			--              [vim.diagnostic.severity.HINT] = diagnostic.message,
-			--            }
-			--            return diagnostic_message[diagnostic.severity]
-			--          end,
-			--        },
+			-- virtual_text = {
+			-- 	source = "if_many",
+			-- 	spacing = 2,
+			-- 	format = function(diagnostic)
+			-- 		local diagnostic_message = {
+			-- 			[vim.diagnostic.severity.ERROR] = diagnostic.message,
+			-- 			[vim.diagnostic.severity.WARN] = diagnostic.message,
+			-- 			[vim.diagnostic.severity.INFO] = diagnostic.message,
+			-- 			[vim.diagnostic.severity.HINT] = diagnostic.message,
+			-- 		}
+			-- 		return diagnostic_message[diagnostic.severity]
+			-- 	end,
+			-- },
 		})
 
 		-- LSP servers and clients are able to communicate to each other what features they support.
@@ -213,8 +213,18 @@ return {
 		local servers = {
 			-- clangd = {},
 			-- gopls = {},
+			elixirls = {},
 			pyright = {},
-			rust_analyzer = {},
+			-- rust_analyzer = {
+			-- 	procMacro = {
+			-- 		ignored = {
+			-- 			leptos_macro = {
+			-- 				-- "component",
+			-- 				"server",
+			-- 			},
+			-- 		},
+			-- 	},
+			-- },
 			-- hls = {}, -- Haskell language server
 			-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 			--
@@ -224,7 +234,6 @@ return {
 			-- But for many setups, the LSP (`ts_ls`) will work just fine
 			-- ts_ls = {},
 			--
-
 			lua_ls = {
 				-- cmd = { ... },
 				-- filetypes = { ... },
@@ -269,8 +278,7 @@ return {
 					-- This handles overriding only values explicitly passed
 					-- by the server configuration above. Useful when disabling
 					-- certain features of an LSP (for example, turning off formatting for ts_ls)
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities,
-						server.capabilities or {})
+					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 					require("lspconfig")[server_name].setup(server)
 				end,
 			},

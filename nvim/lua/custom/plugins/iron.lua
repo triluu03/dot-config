@@ -21,6 +21,13 @@ return {
 						format = common.bracketed_paste_python,
 						block_dividers = { "# %%", "#%%" },
 					},
+					haskell = {
+						command = function(meta)
+							local file = vim.api.nvim_buf_get_name(meta.current_bufnr)
+							-- call `require` in case iron is set up before haskell-tools
+							return require("haskell-tools").repl.mk_repl_cmd(file)
+						end,
+					},
 				},
 				-- set the file type of the newly created repl to ft
 				-- bufnr is the buffer id of the REPL and ft is the filetype of the
@@ -45,7 +52,7 @@ return {
 				--
 				repl_open_cmd = {
 					view.split.vertical.rightbelow("%45"), -- cmd_1: open a repl to the right
-					view.split.rightbelow("%25"), -- cmd_2: open a repl below
+					view.split.rightbelow("%25"),     -- cmd_2: open a repl below
 				},
 			},
 			-- Iron doesn't set keymaps by default anymore.

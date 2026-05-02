@@ -5,11 +5,17 @@ return {
 		config = function()
 			local lint = require("lint")
 			lint.linters_by_ft = {
-				-- markdown = { "markdownlint" },
+				markdown = { "markdownlint" },
 				python = { "ruff" },
-				-- json = { "jsonlint" },
+				json = { "jsonlint" },
 				rust = { "clippy" },
+				js = { "eslint_d" },
 			}
+
+			-- lint.linters.ruff.args = {
+			-- 	"--extend-select",
+			-- 	"I"
+			-- }
 
 			-- To allow other plugins to add linters to require('lint').linters_by_ft,
 			-- instead set linters_by_ft like this:

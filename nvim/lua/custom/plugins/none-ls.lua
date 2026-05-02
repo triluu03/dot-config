@@ -4,6 +4,7 @@ return {
 		"nvimtools/none-ls-extras.nvim",
 		"jayp0521/mason-null-ls.nvim", -- ensure dependencies are installed
 	},
+	lazy = false,
 	config = function()
 		local null_ls = require("null-ls")
 		local formatting = null_ls.builtins.formatting -- to setup formatters
@@ -18,6 +19,8 @@ return {
 				"eslint_d", -- ts/js linter
 				"shfmt",
 				"ruff",
+				"csharpier", -- C# formatter
+				-- "fourmolu", -- Haskell formatter
 			},
 			-- auto-install configured formatters & linters (with null-ls)
 			automatic_installation = true,
@@ -29,6 +32,8 @@ return {
 			formatting.stylua,
 			formatting.shfmt.with({ args = { "-i", "4" } }),
 			formatting.terraform_fmt,
+			formatting.csharpier,
+			-- formatting.fourmolu,
 			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
 			-- require("none-ls.formatting.ruff_format"),
 			require("none-ls.formatting.rustfmt"),
@@ -36,7 +41,7 @@ return {
 
 		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 		null_ls.setup({
-			-- debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
+			debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
 			sources = sources,
 			-- you can reuse a shared lspconfig on_attach callback here
 			on_attach = function(client, bufnr)
