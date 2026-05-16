@@ -35,6 +35,13 @@ vim.schedule(function()
   vim.o.clipboard = "unnamedplus"
 end)
 
+-- Neovim filetype
+vim.filetype.add({
+  extension = {
+    mdx = "mdx",
+  },
+})
+
 -- Enable break indent
 vim.o.breakindent = true
 

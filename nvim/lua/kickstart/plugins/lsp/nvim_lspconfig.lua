@@ -215,6 +215,7 @@ return {
 			-- gopls = {},
 			elixirls = {},
 			pyright = {},
+			mdx_analyzer = {},
 			-- rust_analyzer = {
 			-- 	procMacro = {
 			-- 		ignored = {
