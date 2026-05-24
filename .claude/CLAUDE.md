@@ -1,4 +1,4 @@
-# Coding Style
+# Personal Coding Style and Rules
 
 These rules are strict. Follow them exactly unless the existing project clearly does otherwise (in which case follow the project and tell me).
 
@@ -10,6 +10,7 @@ When in doubt, match the surrounding code and tell me.
 - Avoid using nested loops or if-else statements. Prefer filtering the values first and continue operations.
 - Prefer functional coding style.
 - Pure functions by default. Push all side-effects (except logging) to the edges.
+- Never commit changes to git. The developers will always do it manually!
 
 ### Documentation
 - Document all code — both public API and internal/private code.
@@ -41,6 +42,7 @@ When in doubt, match the surrounding code and tell me.
 - Use Numpy-style docstrings for all public and internal functions and classes.
 - Always include type hints on function signatures and class attributes. Avoid using `any` as type hints.
 - f-strings only.
+- No need to fix all LSP errors if fixing makes the code more difficult to read.
 
 ## Rust
 
