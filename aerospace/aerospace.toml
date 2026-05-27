@@ -60,13 +60,14 @@ automatically-unhide-macos-hidden-apps = false
 
 # Workspaces and monitor assignment
 [workspace-to-monitor-force-assignment]
-    # 1 = 'secondary'		# Terminal
-    # 2 = 'secondary'		# Browswer
-    # 3 = ['main', 'built-in']	# Messaging
-    # 4 = ['main', 'built-in']	# Mail
-    # C = ['main', 'built-in']	# Calendar
-    # F = ['main', 'built-in']	# Finder
-    # M = ['main', 'built-in']	# Music (Spotify)
+    # 1 = 'secondary'
+    # 2 = 'secondary'
+    # 3 = ['main', 'built-in']
+    # 4 = ['main', 'built-in']
+    # C = ['main', 'built-in']
+    # F = ['main', 'built-in']
+    # M = ['main', 'built-in']
+    # P = 'secondary'
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -194,6 +195,8 @@ automatically-unhide-macos-hidden-apps = false
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
+    alt-shift-enter = 'fullscreen'
+    # alt-shift-enter = 'macos-native-fullscreen'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -214,3 +217,7 @@ automatically-unhide-macos-hidden-apps = false
     down = 'volume down'
     up = 'volume up'
     shift-down = ['volume set 0', 'mode main']
+
+[[on-window-detected]]
+if.app-id = "com.mitchellh.ghostty"
+run = "layout floating"
