@@ -9,6 +9,9 @@ local live_multigrep = function(opts)
 	opts = opts or {}
 	opts.cwd = opts.cwd or vim.uv.cwd()
 
+	local inverted = false
+	local vimgrep_entry_maker = make_entry.gen_from_vimgrep(opts)
+	local file_entry_maker = make_entry.gen_from_file(opts)
 	local finder = finders.new_async_job({
 		command_generator = function(prompt)
 			if not prompt or prompt == "" then
@@ -16,24 +19,36 @@ local live_multigrep = function(opts)
 			end
 
 			local pieces = vim.split(prompt, "  ")
-			local args = { "rg" }
-			if pieces[1] then
-				table.insert(args, "-e")
-				table.insert(args, pieces[1])
+			local search_text = pieces[1]
+			inverted = vim.startswith(search_text, "!")
+			if inverted then
+				search_text = search_text:sub(2)
 			end
+			if inverted and search_text == "" then
+				return nil
+			end
+
+			local args = { "rg" }
+			if inverted then
+				table.insert(args, "--files-without-match")
+			end
+			table.insert(args, "-e")
+			table.insert(args, search_text)
 
 			if pieces[2] then
 				table.insert(args, "-g")
 				table.insert(args, pieces[2])
 			end
 
-			---@diagnostic disable-next-line: deprecated
-			return vim.tbl_flatten({
+			return vim.list_extend(
 				args,
-				{ "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
-			})
+				{ "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" }
+			)
 		end,
-		entry_maker = make_entry.gen_from_vimgrep(opts),
+		entry_maker = function(line)
+			-- Inverted searches return filenames instead of vimgrep-formatted matches.
+			return inverted and file_entry_maker(line) or vimgrep_entry_maker(line)
+		end,
 		cwd = opts.cwd,
 	})
 

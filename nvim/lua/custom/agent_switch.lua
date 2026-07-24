@@ -40,7 +40,7 @@ function M.activate_claude()
 				"n",
 				"<leader>as",
 				"<cmd>ClaudeCodeTreeAdd<cr>",
-				{ desc = "Add file", buffer = event.buf, silent = true }
+				{ desc = "Add file", buf = event.buf, silent = true }
 			)
 		end,
 	})

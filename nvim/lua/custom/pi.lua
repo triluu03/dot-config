@@ -124,7 +124,8 @@ local function start_terminal_buffer()
 	vim.api.nvim_win_set_buf(0, bufnr)
 	vim.bo[bufnr].bufhidden = "hide"
 
-	local ok, job = pcall(vim.fn.termopen, config.command, {
+	local ok, job = pcall(vim.fn.jobstart, config.command, {
+		term = true,
 		cwd = vim.fn.getcwd(),
 		on_exit = function(job_id, code)
 			-- Schedule UI cleanup so the terminal callback can finish before its window is closed.
@@ -250,7 +251,7 @@ local function format_file_reference(file_path, line_start, line_end)
 	if line_start ~= nil and line_end ~= nil then
 		-- Use GitHub-style line anchors because they are the common `@file#Lx-Ly` convention.
 		line_suffix = line_start == line_end and string.format("#L%s", line_start)
-				or string.format("#L%s-L%s", line_start, line_end)
+			or string.format("#L%s-L%s", line_start, line_end)
 	end
 
 	if display_path:match("%s") or display_path:find('"', 1, true) then
@@ -384,8 +385,8 @@ function M.setup(opts)
 			-- Defer the mode change so temporary visits used for background sends can return first.
 			vim.schedule(function()
 				local is_pi_window = is_valid_window(state.win)
-						and vim.api.nvim_get_current_win() == state.win
-						and entered_buf == state.buf
+					and vim.api.nvim_get_current_win() == state.win
+					and entered_buf == state.buf
 				if not is_pi_window or not is_job_running() or vim.api.nvim_get_mode().mode == "t" then
 					return
 				end

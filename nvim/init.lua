@@ -1,5 +1,88 @@
--- NOTE: this Neovim config is taken from the Kickstart repo: https://github.com/nvim-lua/kickstart.nvim
--- I've modified it to my personal use. Please check the repo out and start from there!
+--[[
+
+=====================================================================
+==================== READ THIS BEFORE CONTINUING ====================
+=====================================================================
+========                                    .-----.          ========
+========         .----------------------.   | === |          ========
+========         |.-""""""""""""""""""-.|   |-----|          ========
+========         ||                    ||   | === |          ========
+========         ||   KICKSTART.NVIM   ||   |-----|          ========
+========         ||                    ||   | === |          ========
+========         ||                    ||   |-----|          ========
+========         ||:Tutor              ||   |:::::|          ========
+========         |'-..................-'|   |____o|          ========
+========         `"")----------------(""`   ___________      ========
+========        /::::::::::|  |::::::::::\  \ no mouse \     ========
+========       /:::========|  |==hjkl==:::\  \ required \    ========
+========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
+========                                                     ========
+=====================================================================
+=====================================================================
+
+What is Kickstart?
+
+  Kickstart.nvim is *not* a distribution.
+
+  Kickstart.nvim is a starting point for your own configuration.
+    The goal is that you can read every line of code, top-to-bottom, understand
+    what your configuration is doing, and modify it to suit your needs.
+
+    Once you've done that, you can start exploring, configuring and tinkering to
+    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
+    or immediately breaking it into modular pieces. It's up to you!
+
+    If you don't know anything about Lua, I recommend taking some time to read through
+    a guide. One possible example which will only take 10-15 minutes:
+      - https://learnxinyminutes.com/docs/lua/
+
+    After understanding a bit more about Lua, you can use `:help lua-guide` as a
+    reference for how Neovim integrates Lua.
+    - :help lua-guide
+    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
+
+Kickstart Guide:
+
+  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
+
+    If you don't know what this means, type the following:
+      - <escape key>
+      - :
+      - Tutor
+      - <enter key>
+
+    (If you already know the Neovim basics, you can skip this step.)
+
+  Once you've completed that, you can continue working through **AND READING** the rest
+  of the kickstart init.lua.
+
+  Next, run AND READ `:help`.
+    This will open up a help window with some basic information
+    about reading, navigating and searching the builtin help documentation.
+
+    This should be the first place you go to look when you're stuck or confused
+    with something. It's one of my favorite Neovim features.
+
+    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
+    which is very useful when you're not exactly sure of what you're looking for.
+
+  I have left several `:help X` comments throughout the init.lua
+    These are hints about where to find more information about the relevant settings,
+    plugins or Neovim features used in Kickstart.
+
+   NOTE: Look for lines like this
+
+    Throughout the file. These are for you, the reader, to help you understand what is happening.
+    Feel free to delete them once you know what you're doing, but they should serve as a guide
+    for when you are first encountering a few different constructs in your Neovim config.
+
+If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
+
+I hope you enjoy your Neovim journey,
+- TJ
+
+P.S. You can delete this when you're done too. It's your config now! :)
+--]]
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -32,15 +115,8 @@ vim.o.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.schedule(function()
-  vim.o.clipboard = "unnamedplus"
+	vim.o.clipboard = "unnamedplus"
 end)
-
--- Neovim filetype
-vim.filetype.add({
-  extension = {
-    mdx = "mdx",
-  },
-})
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -76,10 +152,6 @@ vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
--- Tab and shift width
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-
 -- Preview substitutions live, as you type!
 vim.o.inccommand = "split"
 
@@ -94,6 +166,9 @@ vim.o.scrolloff = 20
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Fold options
+vim.o.foldcolumn = "auto:1"
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -104,7 +179,12 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
--- Oil plugin keymap
+-- Preserve the familiar nvim-lspconfig alias for Neovim 0.12+.
+vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", {
+	desc = "Show LSP status",
+})
+
+-- Oil Nvim keymap
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- vim.keymap.set("n", "<leader>k", function()
@@ -157,191 +237,96 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 --  Try it with `yap` in normal mode
 --  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-  callback = function()
-    vim.hl.on_yank()
-  end,
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.hl.on_yank()
+	end,
 })
 
 -- [[ Very fancy stuff ]]
--- Backward version of the inside motions
+-- Backward version of inside motions
 local function backward_inner_textobj()
-  -- Count operator
-  local count = vim.v.count1
-  -- Get the next key after I
-  local c = vim.fn.nr2char(vim.fn.getchar())
+	-- Count operator
+	local count = vim.v.count1
+	-- Get the next key after I, e.g. ", ), ], }
+	local c = vim.fn.nr2char(vim.fn.getchar())
 
-  -- Search backwards for the opening delimiter
-  for _ = 1, count do
-    vim.fn.search("\\V" .. c, "b")
-  end
+	-- Search backwards for the opening delimiter
+	for _ = 1, count do
+		vim.fn.search("\\V" .. c, "b")
+	end
 
-  -- Visually select the "inner" part of the pair
-  vim.cmd("normal! vi" .. c)
+	-- Visually select "inner" part of the pair
+	vim.cmd("normal! vi" .. c)
 end
 vim.keymap.set({ "o", "x" }, "I", backward_inner_textobj, { silent = true })
 
 -- Backward version of around motions
 local function backward_around_textobj()
-  -- Count operator
-  local count = vim.v.count1
-  -- Get the next key after I
-  local c = vim.fn.nr2char(vim.fn.getchar())
+	-- Count operator
+	local count = vim.v.count1
+	-- Get the next key after A, e.g. ", ), ], }
+	local c = vim.fn.nr2char(vim.fn.getchar())
 
-  -- Search backwards for the opening delimiter
-  for _ = 1, count do
-    vim.fn.search("\\V" .. c, "b")
-  end
+	-- Search backwards for the opening delimiter
+	for _ = 1, count do
+		vim.fn.search("\\V" .. c, "b")
+	end
 
-  -- Visually select the "inner" part of the pair
-  vim.cmd("normal! va" .. c)
+	-- Visually select "around" part of the pair
+	vim.cmd("normal! va" .. c)
 end
 vim.keymap.set({ "o", "x" }, "A", backward_around_textobj, { silent = true })
---
 -- [[ End of very fancy stuff ]]
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    error("Error cloning lazy.nvim:\n" .. out)
-  end
+if not vim.uv.fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		error("Error cloning lazy.nvim:\n" .. out)
+	end
 end
 
 ---@type vim.Option
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
--- Configuring rust-analyzer
--- vim.lsp.config("rust_analyzer", {
---   settings = {
---     ["rust-analyzer"] = {
---       cargo = {
---         features = "all", -- Enable all features
---       },
---     },
---   },
--- })
-
-vim.g.rustaceanvim = {
-  server = {
-    settings = {
-      ["rust-analyzer"] = {
-        cargo = {
-          features = "all",
-        },
-        check = {
-          command = "clippy",
-        },
-      },
-    },
-  },
-}
-
--- C# official LSP: Roslyn is not added to the Mason plugin at the time of writing.
-vim.lsp.enable("roslyn_ls")
-
 -- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins you can run
---    :Lazy update
---
--- NOTE: Here is where you install your plugins.
+-- Each imported module contributes one or more lazy.nvim plugin specifications.
 require("lazy").setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  -- "github/copilot.vim",
-  "OXY2DEV/markview.nvim", -- Markdown preview plugin
-  -- "mechatroner/rainbow_csv", -- Rainbow CSV plugin, NOTE: this does not seem to work for Lua.
-
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
-  -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-  --
-
-  -- Alternatively, use `config = function() ... end` for full control over the configuration.
-  -- If you prefer to call `setup` explicitly, use:
-  --    {
-  --        'lewis6991/gitsigns.nvim',
-  --        config = function()
-  --            require('gitsigns').setup({
-  --                -- Your gitsigns configuration here
-  --            })
-  --        end,
-  --    }
-  --
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`.
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-
-  --  require 'kickstart.plugins.debug',
-  require("kickstart.plugins.indent_line"),
-  -- require("kickstart.plugins.lint"),
-  require("kickstart.plugins.autopairs"),
-  -- require("kickstart.plugins.neo-tree"),
-  require("kickstart.plugins.which_key"),
-  require("kickstart.plugins.telescope"),
-  require("kickstart.plugins.blink"),
-  require("kickstart.plugins.todo_comments"),
-  require("kickstart.plugins.mini"),
-  require("kickstart.plugins.treesitter"),
-  require("kickstart.plugins.tree_sitter_rstml"),
-  require("kickstart.plugins.nvim_ts_autotag"),
-  require("kickstart.plugins.lsp.lazydev"),
-  require("kickstart.plugins.lsp.nvim_lspconfig"),
-
-  -- Colorscheme
-  -- require("kickstart.plugins.colorscheme.tokyonight"),
-  -- require("kickstart.plugins.colorscheme.catppuccin"),
-  require("kickstart.plugins.colorscheme.kanagawa"),
-  -- require("kickstart.plugins.colorscheme.zenbones"),
-
-  -- Rust
-  require("kickstart.plugins.rust.rustaceanvim"),
-  require("kickstart.plugins.rust.rust"),
-
-  -- Git
-  require("kickstart.plugins.git.gitsigns"),
-  require("kickstart.plugins.git.lazygit"),
-
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  { import = "custom.plugins" },
-  --
-  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
-  -- Or use telescope!
-  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search
+	{ import = "plugins.ai" },
+	{ import = "plugins.colorschemes" },
+	{ import = "plugins.completion" },
+	{ import = "plugins.debug" },
+	{ import = "plugins.editor" },
+	{ import = "plugins.formatting" },
+	{ import = "plugins.git" },
+	{ import = "plugins.languages" },
+	{ import = "plugins.lsp" },
+	{ import = "plugins.search" },
 }, {
-  ui = {
-    -- If you are using a Nerd Font: set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    icons = vim.g.have_nerd_font and {} or {
-      cmd = "⌘",
-      config = "🛠",
-      event = "📅",
-      ft = "📂",
-      init = "⚙",
-      keys = "🗝",
-      plugin = "🔌",
-      runtime = "💻",
-      require = "🌙",
-      source = "📄",
-      start = "🚀",
-      task = "📌",
-      lazy = "💤 ",
-    },
-  },
+	ui = {
+		-- Use lazy.nvim's Nerd Font icons when the configured font supports them.
+		icons = vim.g.have_nerd_font and {} or {
+			cmd = "⌘",
+			config = "🛠",
+			event = "📅",
+			ft = "📂",
+			init = "⚙",
+			keys = "🗝",
+			plugin = "🔌",
+			runtime = "💻",
+			require = "🌙",
+			source = "📄",
+			start = "🚀",
+			task = "📌",
+			lazy = "💤 ",
+		},
+	},
 })
 
 -- Pi coding agent integration
@@ -349,26 +334,26 @@ require("custom.pi").setup()
 
 -- Copy full absolute path
 vim.keymap.set("n", "<leader>pf", function()
-  vim.fn.setreg("+", vim.fn.expand("%:p"))
-  print("Copied full path!")
+	vim.fn.setreg("+", vim.fn.expand("%:p"))
+	print("Copied full path!")
 end, { desc = "Copy full absolute path" })
 
 -- Copy path relative to CWD
 vim.keymap.set("n", "<leader>pr", function()
-  vim.fn.setreg("+", vim.fn.expand("%"))
-  print("Copied relative path!")
+	vim.fn.setreg("+", vim.fn.expand("%"))
+	print("Copied relative path!")
 end, { desc = "Copy path relative to CWD" })
 
 -- Copy filename only
 vim.keymap.set("n", "<leader>pn", function()
-  vim.fn.setreg("+", vim.fn.expand("%:t"))
-  print("Copied filename!")
+	vim.fn.setreg("+", vim.fn.expand("%:t"))
+	print("Copied filename!")
 end, { desc = "Copy filename only" })
 
 -- Copy directory path only
 vim.keymap.set("n", "<leader>pd", function()
-  vim.fn.setreg("+", vim.fn.expand("%:p:h"))
-  print("Copied directory path!")
+	vim.fn.setreg("+", vim.fn.expand("%:p:h"))
+	print("Copied directory path!")
 end, { desc = "Copy directory path only" })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
