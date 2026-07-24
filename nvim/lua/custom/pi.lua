@@ -250,7 +250,7 @@ local function format_file_reference(file_path, line_start, line_end)
 	if line_start ~= nil and line_end ~= nil then
 		-- Use GitHub-style line anchors because they are the common `@file#Lx-Ly` convention.
 		line_suffix = line_start == line_end and string.format("#L%s", line_start)
-		    or string.format("#L%s-L%s", line_start, line_end)
+				or string.format("#L%s-L%s", line_start, line_end)
 	end
 
 	if display_path:match("%s") or display_path:find('"', 1, true) then
@@ -274,8 +274,7 @@ local function current_file_path()
 	end
 
 	if vim.fn.filereadable(file_path) ~= 1 then
-		notify(string.format("Cannot add buffer to Pi: file is not readable: %s", file_path),
-			vim.log.levels.ERROR)
+		notify(string.format("Cannot add buffer to Pi: file is not readable: %s", file_path), vim.log.levels.ERROR)
 		return nil
 	end
 
@@ -385,8 +384,8 @@ function M.setup(opts)
 			-- Defer the mode change so temporary visits used for background sends can return first.
 			vim.schedule(function()
 				local is_pi_window = is_valid_window(state.win)
-				    and vim.api.nvim_get_current_win() == state.win
-				    and entered_buf == state.buf
+						and vim.api.nvim_get_current_win() == state.win
+						and entered_buf == state.buf
 				if not is_pi_window or not is_job_running() or vim.api.nvim_get_mode().mode == "t" then
 					return
 				end

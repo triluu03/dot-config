@@ -213,7 +213,8 @@ return {
 		local servers = {
 			-- clangd = {},
 			-- gopls = {},
-			elixirls = {},
+			-- elixirls = {},
+			expert = {}, -- Official Elixir LSP
 			pyright = {},
 			mdx_analyzer = {},
 			-- rust_analyzer = {
