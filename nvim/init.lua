@@ -301,7 +301,6 @@ require("lazy").setup({
 	{ import = "plugins.ai" },
 	{ import = "plugins.colorschemes" },
 	{ import = "plugins.completion" },
-	{ import = "plugins.debug" },
 	{ import = "plugins.editor" },
 	{ import = "plugins.formatting" },
 	{ import = "plugins.git" },

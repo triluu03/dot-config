@@ -1,18 +1,41 @@
 ---Lazy plugin specification for nvim-treesitter on Neovim 0.12 and newer.
+---NOTE: https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md
 local parsers = {
 	"rust",
 	"python",
+	"elixir",
+	"haskell",
+	--
 	"bash",
 	"c",
 	"diff",
-	"html",
+	--
+	"gitignore",
+	"godot_resource",
+	--
 	"lua",
 	"luadoc",
+	--
+	"make",
 	"markdown",
 	"markdown_inline",
 	"query",
+	--
+	"requirements",
+	--
 	"vim",
 	"vimdoc",
+	--
+	"toml",
+	"yaml",
+	--
+	"jsdoc",
+	"json",
+	"javascript",
+	"typescript",
+	"tsx",
+	"jsx",
+	"html",
 }
 
 ---Return the Tree-sitter language associated with a buffer's filetype.
