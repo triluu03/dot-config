@@ -1,0 +1,16 @@
+{
+  "providers": {
+    "opencode-go": {
+      "baseUrl": "https://opencode.ai/zen/go/v1",
+      "api": "openai-completions",
+      "models": [
+        { "id": "deepseek-v4-pro", "reasoning": true },
+        { "id": "mimo-v2.5", "reasoning": true },
+        { "id": "deepseek-v4-flash", "reasoning": true },
+        { "id": "glm-5.2", "reasoning": true },
+        { "id": "kimi-k2.7-code", "reasoning": true },
+        { "id": "gpt-5.6-luna", "reasoning": true }
+      ]
+    }
+  }
+}
